@@ -8,7 +8,6 @@ type FreetResponse = {
   author: string;
   dateCreated: string;
   content: string;
-  dateModified: string;
 };
 
 /**
@@ -38,8 +37,7 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     ...freetCopy,
     _id: freetCopy._id.toString(),
     author: username,
-    dateCreated: formatDate(freet.dateCreated),
-    dateModified: formatDate(freet.dateModified)
+    dateCreated: formatDate(freet.dateCreated)
   };
 };
 

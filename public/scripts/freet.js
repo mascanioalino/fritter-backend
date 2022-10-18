@@ -18,6 +18,12 @@ function viewFreetsByAuthor(fields) {
 }
 
 function createFreet(fields) {
+  if (fields.group === 'on') {
+    fields.group = true;
+  } else {
+    fields.group = false;
+  }
+
   fetch('/api/freets', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);

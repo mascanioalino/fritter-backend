@@ -1,4 +1,9 @@
-import type {Types, PopulatedDoc, Document} from 'mongoose';
+import type {
+  Types,
+  PopulatedDoc,
+  Document,
+  BooleanSchemaDefinition
+} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
 
@@ -13,7 +18,7 @@ export type Freet = {
   authorId: Types.ObjectId;
   dateCreated: Date;
   content: string;
-  dateModified: Date;
+  group: boolean;
 };
 
 export type PopulatedFreet = {
@@ -21,7 +26,7 @@ export type PopulatedFreet = {
   authorId: User;
   dateCreated: Date;
   content: string;
-  dateModified: Date;
+  group: boolean;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -45,9 +50,8 @@ const FreetSchema = new Schema<Freet>({
     type: String,
     required: true
   },
-  // The date the freet was modified
-  dateModified: {
-    type: Date,
+  group: {
+    type: Boolean,
     required: true
   }
 });

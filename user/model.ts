@@ -12,6 +12,7 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
+  folders: string[];
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
