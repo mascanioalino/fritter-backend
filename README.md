@@ -313,3 +313,172 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+#### `GET /api/likes?user=USERNAME` - Get likes by user
+
+**Returns** 
+- An array of likes by user with username
+
+**Throws**
+- `400` - If user is not given
+- `404` - If no user has given username
+
+#### `GET /api/likes?freetId=id` - Get likes by freet.
+
+ **Returns**
+ - An array of likes in freet with id, freetId
+
+ **Throws** 
+ - `400` - If freetId is not given
+ - `404` - If no freet has given freetId
+
+#### `POST /api/likes` - Like a freet.
+ 
+ **Body**
+
+- `id` _{string}_ - The freet's id
+ **Returns**
+ - A success message 
+ - The created like
+ **Throws** 
+ - `403` - If the user is not logged in
+
+#### `GET /api/bookmarks?user=USERNAME` - Get bookmarks by user
+
+**Returns** 
+- An array of bookmarks by user with username
+
+**Throws**
+- `400` - If user is not given
+- `404` - If no user has given username
+
+#### `GET /api/bookmarks?bookmark=folder` - Get freets in bookmark folder.
+
+ **Returns**
+ - An array of freets in bookmark with name folder
+
+ **Throws** 
+ - `400` - If folder is not given
+ - `404` - If user has no bookmark called folder
+
+#### `POST /api/bookmarks` - Create a folder.
+ 
+ **Body**
+- `name` _{string}_ - The bookmark's name
+
+ **Returns**
+ - A success message 
+ - The created bookmark
+
+ **Throws** 
+ - `403` - If the user is not logged in
+
+ #### `POST /api/bookmarks` - Create a folder.
+ 
+ **Body**
+- `name` _{string}_ - The bookmark's name
+- `freetId` _{string}_ - The freet to add to the folder 
+
+ **Returns**
+ - A success message 
+ - The freet added
+
+ **Throws** 
+ - `403` - If the user is not logged in
+
+#### `GET /api/groups?user=USERNAME` - Get groups user is a member of
+
+ **Returns**
+ - An array of groups a user is in
+
+ **Throws** 
+ - `400` - If user is not given
+
+#### `POST /api/groups` - Create a group.
+ 
+ **Body**
+- `name` _{string}_ - The group's name
+
+ **Returns**
+ - A success message 
+ - The created group
+
+ **Throws** 
+ - `403` - If the user is not logged in
+
+ #### `PUT /api/groups` - Change a group.
+ 
+ **Body**
+- `group` _{string}_ - The group's name
+- `username` _{string}_ - The user who is being moved
+- `action` _{string}_ - "request", "accept", "deny", "admin"
+
+ **Returns**
+ - A success message 
+ - The resulting group 
+
+ **Throws** 
+ - `403` - If the user is not logged in
+ - `404` - If the action is not allowed for their status
+
+ #### `DELETE /api/groups/:groupId?` - Delete a group 
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the user is not an owner
+
+
+#### `GET /api/searchbar?content=CONTENT` - Get groups and users that match content
+
+ **Returns**
+ - An array of groups and users that match the content
+
+ **Throws** 
+ - `400` - If content is not given
+
+ #### `GET /api/comments?freetId=FREET_ID` - Get all comments for freet
+
+ **Returns**
+ - An array of comments for the freet 
+
+ **Throws** 
+ - `400` - If freet_id is not given
+
+  #### `GET /api/comments?commentId=COMMENT_ID` - Get all comments for comment
+
+ **Returns**
+ - An array of comments for the comment 
+
+ **Throws** 
+ - `400` - If comment_id is not given
+
+ #### `POST /api/comments` - Add a comment.
+ 
+ **Body**
+- `freet_id` _{string}_ - The freet's id to comment on 
+- `content` _{string}_ - The content of the comment
+
+ **Returns**
+ - A success message 
+ - The created comment
+
+ **Throws** 
+ - `403` - If the user is not logged in
+
+#### `POST /api/comments/` - Add a comment to comment.
+ 
+ **Body**
+- `comment_id` _{string}_ - The comment's id to comment on 
+- `content` _{string}_ - The content of the comment
+
+ **Returns**
+ - A success message 
+ - The created comment
+
+ **Throws** 
+ - `403` - If the user is not logged in
