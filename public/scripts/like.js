@@ -7,12 +7,18 @@ function viewLikesByFreet(fields) {
 }
 
 function viewLikesByUsername(fields) {
-  fetch(`/api/likes?user=${fields.user}`)
+  fetch(`/api/likes?userId=${fields.user}`)
     .then(showResponse)
     .catch(showResponse);
 }
 
 function likeFreet(fields) {
+  if (fields.hidden === 'on') {
+    fields.hidden = true;
+  } else {
+    fields.hidden = false;
+  }
+
   fetch('/api/likes', {
     method: 'POST',
     body: JSON.stringify(fields),

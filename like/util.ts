@@ -6,7 +6,6 @@ import type {Like, PopulatedLike} from '../like/model';
 type LikeResponse = {
   _id: string;
   freet: string;
-  user: string;
 };
 
 /**
@@ -22,12 +21,9 @@ const constructLikeResponse = (like: HydratedDocument<Like>): LikeResponse => {
       versionKey: false
     })
   };
-  const {username} = likeCopy.authorId;
   delete likeCopy.authorId;
   return {
-    ...likeCopy,
     _id: likeCopy._id.toString(),
-    user: username,
     freet: likeCopy.freetId._id.toString()
   };
 };

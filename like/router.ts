@@ -30,20 +30,25 @@ router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
-    if (req.query.user !== undefined) {
+    if (req.query.userId !== undefined) {
       next();
       return;
     }
 
-    const freetLikes = await LikeCollection.findAllByFreet(req.query.freet as string);
-    const response = freetLikes.map(util.constructLikeResponse);
+    const hiddenFreetLikes = await LikeCollection.findAllHiddenLikesByFreet(req.query.freet as string);
+    const publicFreetLikes = await LikeCollection.findAllPublicLikesByFreet(req.query.freet as string);
+    const response = {hidden: hiddenFreetLikes.map(util.constructLikeResponse), public: publicFreetLikes.map(util.constructLikeResponse)};
     res.status(200).json(response);
   },
   async (req: Request, res: Response) => {
-    const authorLikes = await LikeCollection.findAllByUser(req.query.user as string);
-    const response = authorLikes.map(util.constructLikeResponse);
+    console.log(req.query.userId);
+    console.log(req.session.userId);
+    const hiddenUserLikes = (req.query.userId === req.session.userId) ? await LikeCollection.findAllHiddenLikesByUser(req.query.userId as string) : [];
+    const publicUserLikes = await LikeCollection.findAllPublicLikesByUser(req.query.userId as string);
+    const response = {hidden: hiddenUserLikes.map(util.constructLikeResponse), public: publicUserLikes.map(util.constructLikeResponse)};
     res.status(200).json(response);
   }
+
 );
 
 /**
@@ -60,7 +65,7 @@ router.post(
   [userValidator.isUserLoggedIn, likeValidator.isFreetExists],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const like = await LikeCollection.addOne(userId, req.body.id);
+    const like = await LikeCollection.addOne(userId, req.body.id, req.body.hidden);
 
     res.status(201).json({
       message: 'Your like was created successfully.',

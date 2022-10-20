@@ -12,12 +12,14 @@ export type Like = {
   _id: Types.ObjectId;
   authorId: Types.ObjectId;
   freetId: Types.ObjectId;
+  hidden: boolean;
 };
 
 export type PopulatedLike = {
   _id: Types.ObjectId;
   authorId: User;
   freetId: Freet;
+  hidden: boolean;
 };
 
 const LikeSchema = new Schema<Like>({
@@ -32,6 +34,11 @@ const LikeSchema = new Schema<Like>({
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'Freet'
+  },
+  hidden: {
+    type: Boolean,
+    required: true,
+    ref: 'Hidden'
   }
 });
 

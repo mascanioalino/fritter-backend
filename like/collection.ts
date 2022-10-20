@@ -13,11 +13,13 @@ class LikeCollection {
    */
   static async addOne(
     authorId: Types.ObjectId | string,
-    freetId: Types.ObjectId | string
+    freetId: Types.ObjectId | string,
+    hidden: boolean
   ): Promise<HydratedDocument<Like>> {
     const like = new LikeModel({
       authorId,
-      freetId
+      freetId,
+      hidden
     });
     await like.save(); // Saves freet to MongoDB
     return like.populate('authorId freetId');
@@ -41,23 +43,46 @@ class LikeCollection {
    * @param {string} freetId - The id of the freet
    * @return {Promise<Array<HydratedDocument<Like>>>} - All likes for a particular freet
    */
-  static async findAllByFreet(
+  static async findAllPublicLikesByFreet(
     freetId: Types.ObjectId | string
   ): Promise<Array<HydratedDocument<Like>>> {
-    return LikeModel.find({freetId}).populate('authorId freetId');
+    return LikeModel.find({freetId, hidden: false}).populate('authorId freetId');
   }
 
   /**
-   * Get all likes given by username
+   * Get all likes given by freet
    *
-   * @param {string} username - The username of person who liked freet
-   * @return {Promise<Array<HydratedDocument<Like>>>} - All likes
+   * @param {string} freetId - The id of the freet
+   * @return {Promise<Array<HydratedDocument<Like>>>} - All likes for a particular freet
    */
-  static async findAllByUser(
-    username: string
+  static async findAllHiddenLikesByFreet(
+    freetId: Types.ObjectId | string
   ): Promise<Array<HydratedDocument<Like>>> {
-    const user = await UserCollection.findOneByUsername(username);
-    return LikeModel.find({authorId: user._id}).populate('authorId freetId');
+    return LikeModel.find({freetId, hidden: true}).populate('authorId freetId');
+  }
+
+  /**
+   * Get all public likes given by username
+   *
+   * @param {string} userId - The username of person who liked freet
+   * @return {Promise<Array<HydratedDocument<Like>>>} - All public likes
+   */
+  static async findAllPublicLikesByUser(
+    userId: Types.ObjectId | string
+  ): Promise<Array<HydratedDocument<Like>>> {
+    return LikeModel.find({authorId: userId, hidden: false}).populate('authorId freetId');
+  }
+
+  /**
+   * Get all hidden likes given by username
+   *
+   * @param {string} userId - The username of person who liked freet
+   * @return {Promise<Array<HydratedDocument<Like>>>} - All hidden likes
+   */
+  static async findAllHiddenLikesByUser(
+    userId: Types.ObjectId | string
+  ): Promise<Array<HydratedDocument<Like>>> {
+    return LikeModel.find({authorId: userId, hidden: true}).populate('authorId freetId');
   }
 }
 export default LikeCollection;
