@@ -1,6 +1,6 @@
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
-import {User} from 'user/model';
+import type {User} from '../user/model';
 
 /**
  * This file defines the properties stored in a Like
@@ -9,7 +9,7 @@ import {User} from 'user/model';
 
 export type Group = {
   _id: Types.ObjectId;
-  name: string; // Must be unique
+  groupName: string; // Must be unique
   members: Types.ObjectId[];
   followers: Types.ObjectId[];
   admins: Types.ObjectId[];
@@ -17,8 +17,18 @@ export type Group = {
   owner: Types.ObjectId;
 };
 
+export type PopulatedGroup = {
+  _id: Types.ObjectId;
+  groupName: string; // Must be unique
+  members: User[];
+  followers: User[];
+  admins: User[];
+  requests: User[];
+  owner: User;
+};
+
 const GroupSchema = new Schema<Group>({
-  name: {
+  groupName: {
     type: String,
     required: true
   },
