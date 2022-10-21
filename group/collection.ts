@@ -45,7 +45,10 @@ class GroupCollection {
     const group = await GroupModel.findOne({groupName});
     const user = await UserCollection.findOneByUserId(userId);
     if (group.members.includes(user._id)) { // Already in group -> leave
-      group.members = group.members.filter((value, index, arr) => !value.equals(user._id));
+      if (group.admins.length > 1 || !group.admins.includes(user._id)) {
+        group.members = group.members.filter((value, index, arr) => !value.equals(user._id));
+        group.admins = group.admins.filter((value, index, arr) => !value.equals(user._id));
+      } /// TODO else
     } else if (group.requests.includes(user._id)) { // Already requested -> remove request
       group.requests = group.requests.filter((value, index, arr) => !value.equals(user._id));
     } else { // Not in the group or requested -> add to requests
@@ -69,7 +72,9 @@ class GroupCollection {
     if (group.requests.includes(requestingUser._id)) {
       if (accept) {
         group.members.push(requestingUser._id);
-        group.followers.push(requestingUser._id);
+        if (!group.followers.includes(requestingUser._id)) {
+          group.followers.push(requestingUser._id);
+        }
       }
 
       group.requests = group.requests.filter((value, index, arr) => !value.equals(requestingUser._id));
@@ -77,6 +82,74 @@ class GroupCollection {
 
     await group.save();
     return group;
+  }
+
+  /**
+   * Update a group by adding an admin
+   *
+   * @param {string} groupName - The name of the group
+   * @return {Promise<HydratedDocument<Group>>} - A group with the groupName
+   */
+  static async updateOneByAdmin(groupName: string, username: string): Promise<HydratedDocument<Group>> {
+    const group = await GroupModel.findOne({groupName});
+    const newAdmin = await UserCollection.findOneByUsername(username);
+    if (!group.admins.includes(newAdmin._id)) {
+      group.admins.push(newAdmin._id);
+      if (!group.followers.includes(newAdmin._id)) {
+        group.followers.push(newAdmin._id);
+      }
+
+      if (!group.members.includes(newAdmin._id)) {
+        group.members.push(newAdmin._id);
+      }
+
+      group.requests = group.requests.filter((value, index, arr) => !value.equals(newAdmin._id));
+    }
+
+    await group.save();
+    return group;
+  }
+
+  /**
+   * Update a group by changing the owner
+   *
+   * @param {string} groupName - The name of the group
+   * @return {Promise<HydratedDocument<Group>>} - A group with the new owner
+   */
+  static async updateOneByOwner(groupName: string, username: string): Promise<HydratedDocument<Group>> {
+    const group = await GroupModel.findOne({groupName});
+    const newOwner = await UserCollection.findOneByUsername(username);
+
+    if (!group.admins.includes(newOwner._id)) {
+      group.admins.push(newOwner._id);
+    }
+
+    if (!group.followers.includes(newOwner._id)) {
+      group.followers.push(newOwner._id);
+    }
+
+    if (!group.members.includes(newOwner._id)) {
+      group.members.push(newOwner._id);
+    }
+
+    group.requests = group.requests.filter((value, index, arr) => !value.equals(newOwner._id));
+
+    group.owner = newOwner._id;
+
+    await group.save();
+    return group;
+  }
+
+  /**
+   * Delete a group from the collection.
+   *
+   * @param {string} groupName - The groupName of group to delete
+   * @return {Promise<Boolean>} - true if the group has been deleted, false otherwise
+   */
+  static async deleteOne(groupName: string): Promise<boolean> {
+    const group = await GroupModel.deleteOne({groupName});
+    console.log(group);
+    return group !== null;
   }
 }
 

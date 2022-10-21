@@ -17,3 +17,21 @@ function respondRequestGroup(fields) {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function addGroupAdmin(fields) {
+  fetch('/api/groups/admins', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function changeGroupOwner(fields) {
+  fetch('/api/groups/owner', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function deleteGroup(fields) {
+  fetch('/api/groups', {method: 'DELETE', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}

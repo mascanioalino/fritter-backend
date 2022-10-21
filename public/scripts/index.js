@@ -49,7 +49,10 @@ const formsAndHandlers = {
   'request-leave-group': joinLeaveGroup,
   'respond-request-group': respondRequestGroup,
   'create-folder': createBookmark,
-  'bookmark-freet': bookmarkFreet
+  'bookmark-freet': bookmarkFreet,
+  'add-group-admin': addGroupAdmin,
+  'change-group-owner': changeGroupOwner,
+  'delete-group': deleteGroup
 };
 
 // Attach handlers to forms

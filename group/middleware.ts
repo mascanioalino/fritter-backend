@@ -71,4 +71,36 @@ const isUserRequests = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-export {isGroupDoesntExist, isGroupExists, isUserAdmin, isUserRequests};
+/**
+ * Checks if a user with userId exists
+ */
+const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
+  const group = await GroupCollection.findOne(req.body.groupName);
+  if (!group.owner.equals(req.session.userId)) {
+    res.status(405).json({
+      error: {
+        freetNotFound: `User ${req.session.userId} is not the owner`
+      }
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Checks if a user with userId is owner
+ */
+const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUserId(req.session.userId);
+  if (!user) {
+    res.status(400).json({
+      error: `A user with username ${req.session.userId as string} does not exist.`
+    });
+    return;
+  }
+
+  next();
+};
+
+export {isGroupDoesntExist, isGroupExists, isUserAdmin, isUserRequests, isUserExists, isUserOwner};
