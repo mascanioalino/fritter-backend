@@ -47,7 +47,9 @@ const formsAndHandlers = {
   'view-user-likes': viewLikesByUsername,
   'create-group': createGroup,
   'request-leave-group': joinLeaveGroup,
-  'respond-request-group': respondRequestGroup
+  'respond-request-group': respondRequestGroup,
+  'create-folder': createBookmark,
+  'bookmark-freet': bookmarkFreet
 };
 
 // Attach handlers to forms

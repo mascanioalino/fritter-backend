@@ -1,6 +1,7 @@
+import type {Freet} from '../freet/model';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
-import type {User} from 'user/model';
+import type {User} from '../user/model';
 
 /**
  * This file defines the properties stored in a Like
@@ -9,28 +10,34 @@ import type {User} from 'user/model';
 
 export type Bookmark = {
   _id: Types.ObjectId;
-  authorId: Types.ObjectId;
+  userId: Types.ObjectId;
   folder: string;
-  freetId: Types.ObjectId;
+  freets: Types.ObjectId[];
+};
+
+export type PopulatedBookmark = {
+  _id: Types.ObjectId;
+  userId: User; // Must be unique
+  folder: string;
+  freets: Freet[];
 };
 
 const BookmarkSchema = new Schema<Bookmark>({
   // The author userId
-  authorId: {
+  userId: {
     // Use Types.ObjectId outside of the schema
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
-  freetId: {
-    type: Schema.Types.ObjectId,
+  freets: {
+    type: [Schema.Types.ObjectId],
     required: true,
     ref: 'Freet'
   },
   folder: {
     type: String,
-    required: true,
-    ref: 'Folder'
+    required: true
   }
 });
 
