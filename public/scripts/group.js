@@ -9,3 +9,12 @@ function joinLeaveGroup(fields) {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function respondRequestGroup(fields) {
+  fields.response = true;
+  fields.accept = fields.accept === 'on';
+  console.log(fields);
+  fetch('/api/groups', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}

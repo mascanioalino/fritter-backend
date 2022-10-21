@@ -35,17 +35,32 @@ router.post(
  * @name PUT /api/groups
  *
  * @param {string} groupName - The content of the freet
+ * @param {string} userName - The user to accept
  * @return {GroupResponse} - The created like
  * @throws {403} - If the user is not logged in
  * @throws {404} - If the name already exists
+ * @throws {405} - If the user is not an admin
  */
 router.put(
   '/',
   [userValidator.isUserLoggedIn, groupValidator.isGroupExists],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const group = await GroupCollection.updateOne(req.body.groupName, userId);
+    if (req.body.response) { // Need to be admin
+      next();
+      return;
+    }
 
+    const group = await GroupCollection.updateOneByJoinLeave(req.body.groupName, userId);
+
+    res.status(201).json({
+      message: 'Your group was editted successfully.',
+      group: util.constructGroupResponse(group)
+    });
+  },
+  [groupValidator.isUserAdmin, groupValidator.isUserRequests],
+  async (req: Request, res: Response) => {
+    const group = await GroupCollection.updateOneByResponse(req.body.groupName, req.body.username, req.body.accept);
     res.status(201).json({
       message: 'Your group was editted successfully.',
       group: util.constructGroupResponse(group)

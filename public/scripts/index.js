@@ -46,7 +46,8 @@ const formsAndHandlers = {
   'view-freet-likes': viewLikesByFreet,
   'view-user-likes': viewLikesByUsername,
   'create-group': createGroup,
-  'join-leave-group': joinLeaveGroup
+  'request-leave-group': joinLeaveGroup,
+  'respond-request-group': respondRequestGroup
 };
 
 // Attach handlers to forms
