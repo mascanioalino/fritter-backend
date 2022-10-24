@@ -343,28 +343,27 @@ This renders the `index.html` file that will be used to interact with the backen
  **Throws** 
  - `403` - If the user is not logged in
 
-#### `GET /api/bookmarks?user=USERNAME` - Get bookmarks by user
+#### `GET /api/bookmarks` - Get bookmarks by user
 
 **Returns** 
 - An array of bookmarks by user with username
 
 **Throws**
-- `400` - If user is not given
-- `404` - If no user has given username
+- `403` - If user is not logged in 
 
-#### `GET /api/bookmarks?bookmark=folder` - Get freets in bookmark folder.
+#### `GET /api/bookmarks?folder=folder` - Get freets in bookmark folder.
 
  **Returns**
  - An array of freets in bookmark with name folder
 
  **Throws** 
- - `400` - If folder is not given
+ - `403` - If user is not logged in 
  - `404` - If user has no bookmark called folder
 
 #### `POST /api/bookmarks` - Create a folder.
  
  **Body**
-- `name` _{string}_ - The bookmark's name
+- `folder` _{string}_ - The folder's name
 
  **Returns**
  - A success message 
@@ -372,11 +371,12 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `403` - If the user is not logged in
+ - `404` - If folder already exists
 
- #### `POST /api/bookmarks` - Create a folder.
+ #### `POST /api/bookmarks` - Bookmark a freet
  
  **Body**
-- `name` _{string}_ - The bookmark's name
+- `folder` _{string}_ - The folder's name
 - `freetId` _{string}_ - The freet to add to the folder 
 
  **Returns**
@@ -385,6 +385,8 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `403` - If the user is not logged in
+ - `404` - If folder does not exist
+
 
 #### `GET /api/groups?username=USERNAME` - Get groups user is a member of
 

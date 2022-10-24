@@ -5,11 +5,12 @@ import BookmarkCollection from './collection';
  * Checks if a folder does not exist
  */
 const isFolderDoesntExist = async (req: Request, res: Response, next: NextFunction) => {
-  const bookmark = await BookmarkCollection.findOneByFolderAndUser(req.body.folder, req.session.userId);
+  const folder = req.body.folder as string || req.query.folder as string;
+  const bookmark = await BookmarkCollection.findOneByFolderAndUser(folder, req.session.userId);
   if (bookmark) {
-    res.status(403).json({
+    res.status(404).json({
       error: {
-        freetNotFound: `Bookmark with folder name ${req.body.folder} already exists.`
+        folderFound: `Bookmark with folder name ${folder} already exists.`
       }
     });
     return;
@@ -22,11 +23,12 @@ const isFolderDoesntExist = async (req: Request, res: Response, next: NextFuncti
  * Checks if a folder exists
  */
 const isFolderExists = async (req: Request, res: Response, next: NextFunction) => {
-  const bookmark = await BookmarkCollection.findOneByFolderAndUser(req.body.folder, req.session.userId);
+  const folder = req.body.folder as string || req.query.folder as string;
+  const bookmark = await BookmarkCollection.findOneByFolderAndUser(folder, req.session.userId);
   if (!bookmark) {
-    res.status(403).json({
+    res.status(404).json({
       error: {
-        freetNotFound: `Bookmark with folder name ${req.body.folder} does not exist.`
+        folderNotFound: `Bookmark with folder name ${folder} does not exist.`
       }
     });
     return;

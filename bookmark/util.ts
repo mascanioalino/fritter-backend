@@ -5,6 +5,7 @@ import type {Bookmark} from './model';
 type BookmarkResponse = {
   _id: string;
   folder: string;
+  freets: string[];
 };
 
 /**
@@ -22,7 +23,8 @@ const constructBookmarkResponse = (bookmark: HydratedDocument<Bookmark>): Bookma
   };
   return {
     _id: bookmarkCopy._id.toString(),
-    folder: bookmarkCopy.folder
+    folder: bookmarkCopy.folder,
+    freets: bookmarkCopy.freets.map(f => f._id.toString())
   };
 };
 

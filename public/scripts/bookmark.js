@@ -9,3 +9,15 @@ function bookmarkFreet(fields) {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function viewBookmarks(fields) {
+  fetch(`/api/bookmarks?userId=${fields.userId}`)
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function viewFolder(fields) {
+  fetch(`/api/bookmarks?folder=${fields.folder}`)
+    .then(showResponse)
+    .catch(showResponse);
+}

@@ -34,6 +34,16 @@ class BookmarkCollection {
   }
 
   /**
+   * Get all the bookmarks by given user
+   *
+   * @param {string} userId - The id of the owner of bookmarks
+   * @return {Promise<HydratedDocument<Bookmark>[]>} - An array of all of the Bookmarks
+   */
+  static async findAllByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Bookmark>>> {
+    return BookmarkModel.find({userId}).populate('userId');
+  }
+
+  /**
    * Update a bookmark by adding or removing a freet
    *
    * @param {string} folder - The name of the folder
