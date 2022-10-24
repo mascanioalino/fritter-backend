@@ -92,10 +92,11 @@ const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
  * Checks if a user with userId is owner
  */
 const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await UserCollection.findOneByUsername(req.body.username);
+  const username = req.body.username as string || req.query.username as string;
+  const user = await UserCollection.findOneByUsername(username);
   if (!user) {
     res.status(400).json({
-      error: `A user with username ${req.body.username as string} does not exist.`
+      error: `A user with username ${username} does not exist.`
     });
     return;
   }

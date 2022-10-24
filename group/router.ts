@@ -5,6 +5,27 @@ import * as userValidator from '../user/middleware';
 import * as groupValidator from '../group/middleware';
 import * as util from './util';
 const router = express.Router();
+
+/**
+ * Get groups for a user.
+ *
+ * @name GET /api/groups?username=username
+ *
+ * @return {GroupResponse[]} - An array of groups a user is a part of
+ * @throws {400} - If the user with username does not exist
+ *
+ */
+router.get(
+  '/',
+  [groupValidator.isUserExists],
+  async (req: Request, res: Response) => {
+    console.log('here00');
+    const allGroups = await GroupCollection.findAllByUsername(req.query.username as string);
+    const response = allGroups.map(util.constructGroupResponse);
+    res.status(200).json(response);
+  }
+);
+
 /**
  * Create a group
  *

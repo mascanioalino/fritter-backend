@@ -386,7 +386,7 @@ This renders the `index.html` file that will be used to interact with the backen
  **Throws** 
  - `403` - If the user is not logged in
 
-#### `GET /api/groups?user=USERNAME` - Get groups user is a member of
+#### `GET /api/groups?username=USERNAME` - Get groups user is a member of
 
  **Returns**
  - An array of groups a user is in

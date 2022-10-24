@@ -56,7 +56,8 @@ const formsAndHandlers = {
   'comment-freet': createComment,
   'view-comments-by-comment': viewCommentsByComment,
   'view-comments-by-freet': viewCommentsByFreet,
-  'delete-comment': deleteComment
+  'delete-comment': deleteComment,
+  'view-groups': viewGroupsByUser
 };
 
 // Attach handlers to forms
@@ -66,6 +67,7 @@ function init() {
     form.onsubmit = e => {
       e.preventDefault();
       const formData = new FormData(form);
+      console.log(Object.fromEntries(formData.entries()))
       handler(Object.fromEntries(formData.entries()));
       return false; // Don't reload page
     };

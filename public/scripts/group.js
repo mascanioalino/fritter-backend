@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 function createGroup(fields) {
   fetch('/api/groups', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
@@ -32,6 +33,12 @@ function changeGroupOwner(fields) {
 
 function deleteGroup(fields) {
   fetch('/api/groups', {method: 'DELETE', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function viewGroupsByUser(fields) {
+  fetch(`/api/groups?username=${fields.username}`)
     .then(showResponse)
     .catch(showResponse);
 }

@@ -36,6 +36,17 @@ class GroupCollection {
   }
 
   /**
+   * Get all the groups by a given user
+   *
+   * @param {string} username - The username of the member of the groups
+   * @return {Promise<HydratedDocument<Group>[]>} - An array of all of the groups
+   */
+  static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Group>>> {
+    const user = await UserCollection.findOneByUsername(username);
+    return GroupModel.find({members: user._id}).populate('members');
+  }
+
+  /**
    * Update a group by adding or removing a member
    *
    * @param {string} groupName - The name of the group
