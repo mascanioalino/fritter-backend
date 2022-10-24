@@ -47,30 +47,33 @@ const isContentValid = async (req: Request, res: Response, next: NextFunction) =
  * Checks if a freet with freetId is req.params exists
  */
 const isIdValid = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.body.freetId) {
-    const validFormat = Types.ObjectId.isValid(req.body.freetId);
-    const freet = validFormat ? await FreetCollection.findOne(req.body.freetId) : '';
+  const freetId: string = req.body.freetId as string || req.query.freetId as string;
+  const commentId: string = req.body.commentId as string || req.query.commentId as string;
+
+  if (freetId) {
+    const validFormat = Types.ObjectId.isValid(freetId);
+    const freet = validFormat ? await FreetCollection.findOne(freetId) : '';
     if (!freet) {
       res.status(404).json({
         error: {
-          freetNotFound: `Freet with freet ID ${req.body.freetId} does not exist.`
+          freetNotFound: `Freet with freet ID ${freetId} does not exist.`
         }
       });
       return;
     }
-  } else if (req.body.commentId) {
-    const validFormat = Types.ObjectId.isValid(req.body.commentId);
-    const comment = validFormat ? await CommentCollection.findOne(req.body.commentId) : '';
+  } else if (commentId) {
+    const validFormat = Types.ObjectId.isValid(commentId);
+    const comment = validFormat ? await CommentCollection.findOne(commentId) : '';
     if (!comment) {
       res.status(404).json({
         error: {
-          commentNotFound: `Comment with freet ID ${req.body.commentId} does not exist.`
+          commentNotFound: `Comment with comment ID ${commentId} does not exist.`
         }
       });
       return;
     }
   } else {
-    res.status(404).json({
+    res.status(400).json({
       error: {
         parentNotFound: 'No comment or freet ID input'
       }
@@ -97,22 +100,7 @@ const isValidCommentModifier = async (req: Request, res: Response, next: NextFun
   next();
 };
 
-/**
- * Checks if there is an ID present
- */
-const isIdPresent = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.query.freetId && !req.query.commentId) {
-    res.status(400).json({
-      error: 'ID not given'
-    });
-    return;
-  }
-
-  next();
-};
-
 export {
-  isIdPresent,
   isContentValid,
   isIdValid,
   isValidCommentModifier,

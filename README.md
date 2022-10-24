@@ -440,6 +440,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `400` - If freet_id is not given
+ - `404` - If freet does not exist
 
   #### `GET /api/comments?commentId=COMMENT_ID` - Get all comments for comment
 
@@ -448,14 +449,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `400` - If comment_id is not given
-
-  #### `GET /api/comments?commentId=COMMENT_ID` - Get all comments for comment
-
- **Returns**
- - An array of comments for the comment 
-
- **Throws** 
- - `400` - If comment_id is not given
+ - `404` - If comment does not exist
 
  #### `POST /api/comments` - Add a comment.
  
@@ -472,7 +466,7 @@ This renders the `index.html` file that will be used to interact with the backen
  - `403` - If the user is not logged in
  - `400` - If content is empty
  - `413` - If content >140 characters
- - `405` - If freet or comment do not exist
+ - `404` - If freet or comment do not exist
 
  #### `DELETE /api/comments/:commentId?` - Delete a comment 
 
@@ -483,4 +477,4 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in or is not the author of the comment 
-- `404` if the user is not an owner
+- `404` if the comment does not exist 

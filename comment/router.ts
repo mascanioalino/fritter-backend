@@ -12,6 +12,8 @@ const router = express.Router();
  * @name GET /api/comments?freetId=id
  *
  * @return {CommentResponse[]} - A list of all the comments for freet with ID commentId
+ * @throws {400} - If freet_id is not given
+ * @throws {404} - If freet does not exist
  */
 /**
  * Get comments by comment.
@@ -19,11 +21,12 @@ const router = express.Router();
  * @name GET /api/comments?commentId=id
  *
  * @return {CommentResponse[]} - An array of comments for comment with ID commentId
- *
+ * @throws {400} - If comment_id is not given
+ * @throws {404} - If comment does not exist
  */
 router.get(
   '/',
-  [commentValidator.isIdPresent],
+  [commentValidator.isIdValid],
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
     if (req.query.freetId !== undefined) {
@@ -45,18 +48,18 @@ router.get(
 );
 
 /**
- * Create a folder
+ * Create a comment
  *
  * @name POST /api/comments
  *
  * @param {string} freetId - The freetId
  * @param {string} commentId - The commentId
  * @param {string} content - The content of the comment
- * @return {CommentResponse} - The created like
+ * @return {CommentResponse} - The created comment
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the content is empty
  * @throws {413} - If the content > 140 characters
- * @throws {405} - If the freet or comment does not exist
+ * @throws {404} - If the freet or comment does not exist
  */
 router.post(
   '/',
