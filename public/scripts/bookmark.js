@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 function createBookmark(fields) {
   fetch('/api/bookmarks', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
@@ -11,7 +12,7 @@ function bookmarkFreet(fields) {
 }
 
 function viewBookmarks(fields) {
-  fetch(`/api/bookmarks?userId=${fields.userId}`)
+  fetch('/api/bookmarks')
     .then(showResponse)
     .catch(showResponse);
 }
