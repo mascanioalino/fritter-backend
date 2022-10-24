@@ -86,4 +86,29 @@ router.post(
   }
 );
 
+/**
+ * Delete a comment
+ *
+ * @name DELETE /api/comments/:id
+ *
+ * @return {string} - A success message
+ * @throws {403} - If the user is not logged in or is not the author of
+ *                 the comment
+ * @throws {404} - If the commentId is not valid
+ */
+router.delete(
+  '/:commentId?',
+  [
+    userValidator.isUserLoggedIn,
+    commentValidator.isCommentExists,
+    commentValidator.isValidCommentModifier
+  ],
+  async (req: Request, res: Response) => {
+    await CommentCollection.deleteOne(req.params.commentId);
+    res.status(200).json({
+      message: 'Your comment was deleted successfully.'
+    });
+  }
+);
+
 export {router as commentRouter};

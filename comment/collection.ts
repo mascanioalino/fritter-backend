@@ -72,5 +72,17 @@ class CommentCollection {
   static async findAllByComment(commentId: Types.ObjectId | string) {
     return CommentModel.find({parent: commentId}).populate('parent');
   }
+
+  /**
+   * Delete a comment with given commentId.
+   *
+   * @param {string} commentID - The commentId of comment to delete
+   * @return {Promise<Boolean>} - true if the comment has been deleted, false otherwise
+   */
+  static async deleteOne(commentId: Types.ObjectId | string): Promise<boolean> {
+    const comment = await CommentModel.deleteOne({_id: commentId});
+    return comment !== null;
+  }
 }
+
 export default CommentCollection;

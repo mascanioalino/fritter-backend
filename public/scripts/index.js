@@ -55,7 +55,8 @@ const formsAndHandlers = {
   'delete-group': deleteGroup,
   'comment-freet': createComment,
   'view-comments-by-comment': viewCommentsByComment,
-  'view-comments-by-freet': viewCommentsByFreet
+  'view-comments-by-freet': viewCommentsByFreet,
+  'delete-comment': deleteComment
 };
 
 // Attach handlers to forms

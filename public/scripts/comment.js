@@ -22,3 +22,10 @@ function viewCommentsByFreet(fields) {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function deleteComment(fields) {
+  console.log(fields);
+  fetch(`/api/comments/${fields.commentId}`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}
