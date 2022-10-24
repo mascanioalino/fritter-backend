@@ -45,10 +45,8 @@ class GroupCollection {
     const group = await GroupModel.findOne({groupName});
     const user = await UserCollection.findOneByUserId(userId);
     if (group.members.includes(user._id)) { // Already in group -> leave
-      if (group.admins.length > 1 || !group.admins.includes(user._id)) {
-        group.members = group.members.filter((value, index, arr) => !value.equals(user._id));
-        group.admins = group.admins.filter((value, index, arr) => !value.equals(user._id));
-      } /// TODO else
+      group.members = group.members.filter((value, index, arr) => !value.equals(user._id));
+      group.admins = group.admins.filter((value, index, arr) => !value.equals(user._id));
     } else if (group.requests.includes(user._id)) { // Already requested -> remove request
       group.requests = group.requests.filter((value, index, arr) => !value.equals(user._id));
     } else { // Not in the group or requested -> add to requests
@@ -126,10 +124,6 @@ class GroupCollection {
 
     if (!group.followers.includes(newOwner._id)) {
       group.followers.push(newOwner._id);
-    }
-
-    if (!group.members.includes(newOwner._id)) {
-      group.members.push(newOwner._id);
     }
 
     group.requests = group.requests.filter((value, index, arr) => !value.equals(newOwner._id));

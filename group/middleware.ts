@@ -10,7 +10,7 @@ const isGroupDoesntExist = async (req: Request, res: Response, next: NextFunctio
   if (group) {
     res.status(404).json({
       error: {
-        freetNotFound: `Group with ${req.body.groupName} already exists.`
+        groupNotFound: `Group with ${req.body.groupName} already exists.`
       }
     });
     return;
@@ -27,7 +27,7 @@ const isGroupExists = async (req: Request, res: Response, next: NextFunction) =>
   if (!group) {
     res.status(404).json({
       error: {
-        freetNotFound: `Group with ${req.body.groupName} does not exist.`
+        groupNotFound: `Group with ${req.body.groupName} does not exist.`
       }
     });
     return;
@@ -44,7 +44,7 @@ const isUserAdmin = async (req: Request, res: Response, next: NextFunction) => {
   if (!group.admins.includes(req.session.userId)) {
     res.status(405).json({
       error: {
-        freetNotFound: `User ${req.session.userId} is not an admin`
+        userNotFound: `User ${req.session.userId} is not an admin`
       }
     });
     return;
@@ -62,7 +62,7 @@ const isUserRequests = async (req: Request, res: Response, next: NextFunction) =
   if (!group.requests.includes(requestingUser._id)) {
     res.status(406).json({
       error: {
-        freetNotFound: `User ${requestingUser._id} is not in a request`
+        userNotFound: `User ${requestingUser._id} is not in a request`
       }
     });
     return;
@@ -74,12 +74,12 @@ const isUserRequests = async (req: Request, res: Response, next: NextFunction) =
 /**
  * Checks if a user with userId exists
  */
-const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
+const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
   const group = await GroupCollection.findOne(req.body.groupName);
   if (!group.owner.equals(req.session.userId)) {
     res.status(405).json({
       error: {
-        freetNotFound: `User ${req.session.userId} is not the owner`
+        userNotFound: `User ${req.session.userId as string} is not the owner`
       }
     });
     return;
@@ -91,11 +91,11 @@ const isUserExists = async (req: Request, res: Response, next: NextFunction) => 
 /**
  * Checks if a user with userId is owner
  */
-const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await UserCollection.findOneByUserId(req.session.userId);
+const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUsername(req.body.username);
   if (!user) {
     res.status(400).json({
-      error: `A user with username ${req.session.userId as string} does not exist.`
+      error: `A user with username ${req.body.username as string} does not exist.`
     });
     return;
   }
@@ -103,4 +103,35 @@ const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export {isGroupDoesntExist, isGroupExists, isUserAdmin, isUserRequests, isUserExists, isUserOwner};
+/**
+ * Checks if a user can leave the group
+ */
+const isAbleToLeave = async (req: Request, res: Response, next: NextFunction) => {
+  const group = await GroupCollection.findOne(req.body.groupName);
+  if (!req.body.response && group.admins.length === 1 && group.admins.includes(req.session.userId)) {
+    res.status(407).json({
+      error: `The user ${req.session.userId as string} cannot not leave.`
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Checks if a user is a member of group
+ */
+const isUserMember = async (req: Request, res: Response, next: NextFunction) => {
+  const group = await GroupCollection.findOne(req.body.groupName);
+  const user = await UserCollection.findOneByUsername(req.body.username);
+  if (!group.members.includes(user._id)) {
+    res.status(406).json({
+      error: `The user ${req.body.username as string} is not in the group.`
+    });
+    return;
+  }
+
+  next();
+};
+
+export {isUserMember, isAbleToLeave, isGroupDoesntExist, isGroupExists, isUserAdmin, isUserRequests, isUserExists, isUserOwner};

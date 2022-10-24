@@ -397,7 +397,7 @@ This renders the `index.html` file that will be used to interact with the backen
 #### `POST /api/groups` - Create a group.
  
  **Body**
-- `name` _{string}_ - The group's name
+- `groupName` _{string}_ - The group's name
 
  **Returns**
  - A success message 
@@ -405,13 +405,14 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `403` - If the user is not logged in
+ - `404` - If the name already exists
 
  #### `PUT /api/groups` - Change a group.
  
  **Body**
-- `group` _{string}_ - The group's name
+- `response` _{string}_ - True if admin is responding to request
+- `groupName` _{string}_ - The group's name
 - `username` _{string}_ - The user who is being moved
-- `action` _{string}_ - "request", "accept", "deny", "admin"
 
  **Returns**
  - A success message 
@@ -419,9 +420,46 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `403` - If the user is not logged in
- - `404` - If the action is not allowed for their status
+ - `404` - If the group does not exist
+ - `405` - If the user is not an admin
+ - `406` - If the user is not in requests
+ - `407` - If the user cannot leave
 
- #### `DELETE /api/groups/:groupId?` - Delete a group 
+  #### `PUT /api/groups/admins` - Change a group.
+ 
+ **Body**
+- `groupName` _{string}_ - The group's name
+- `username` _{string}_ - The user who is being added as admin
+
+ **Returns**
+ - A success message 
+ - The resulting group 
+
+ **Throws** 
+ - `400` - If the user with username does not exist 
+ - `403` - If the user is not logged in
+ - `404` - If the group does not exist
+ - `405` - If the user is not an admin
+ - `406` - If the user is not in members
+
+  #### `PUT /api/groups/owner` - Change a group.
+ 
+ **Body**
+- `groupName` _{string}_ - The group's name
+- `username` _{string}_ - The user who is being made the owner
+
+ **Returns**
+ - A success message 
+ - The resulting group 
+
+ **Throws** 
+ - `400` - If the user with username does not exist 
+ - `403` - If the user is not logged in
+ - `404` - If the group does not exist
+ - `405` - If the user does not have the right permissions
+ - `406` - If the user is not in members
+
+ #### `DELETE /api/groups/:groupName?` - Delete a group 
 
 **Returns**
 
@@ -430,7 +468,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
-- `404` if the user is not an owner
+- `405` if the user is not an owner
 
 
  #### `GET /api/comments?freetId=FREET_ID` - Get all comments for freet

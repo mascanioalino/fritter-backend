@@ -4,15 +4,14 @@ import GroupCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as groupValidator from '../group/middleware';
 import * as util from './util';
-import UserCollection from '../user/collection';
 const router = express.Router();
 /**
  * Create a group
  *
  * @name POST /api/groups
  *
- * @param {string} groupName - The content of the freet
- * @return {GroupResponse} - The created like
+ * @param {string} groupName - The name of the group
+ * @return {GroupResponse} - The created group
  * @throws {403} - If the user is not logged in
  * @throws {404} - If the name already exists
  */
@@ -37,14 +36,18 @@ router.post(
  *
  * @param {string} groupName - The name of the group
  * @param {string} userName - The user to accept
- * @return {GroupResponse} - The created like
+ * @param {boolean} response - True if responding to request
+ * @param {boolean} accept - True if accepting a user to a group
+ * @return {GroupResponse} - The created group
  * @throws {403} - If the user is not logged in
- * @throws {404} - If the name already exists
+ * @throws {404} - If the group does not exist
  * @throws {405} - If the user is not an admin
+ * @throws {406} - If the user is not in requests
+ * @throws {407} - If the user cannot leave
  */
 router.put(
   '/',
-  [userValidator.isUserLoggedIn, groupValidator.isGroupExists],
+  [userValidator.isUserLoggedIn, groupValidator.isGroupExists, groupValidator.isAbleToLeave],
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     if (req.body.response) { // Need to be admin
@@ -79,12 +82,13 @@ router.put(
  * @return {GroupResponse} - The created like
  * @throws {400} - If the new admin user does not exist
  * @throws {403} - If the user is not logged in
- * @throws {404} - If the name already exists
+ * @throws {404} - If the group does not exist
  * @throws {405} - If the user is not an admin
+ * @throws {406} - If the username is not in members
  */
 router.put(
   '/admins',
-  [groupValidator.isUserExists, userValidator.isUserLoggedIn, groupValidator.isGroupExists, groupValidator.isUserAdmin],
+  [groupValidator.isUserExists, userValidator.isUserLoggedIn, groupValidator.isGroupExists, groupValidator.isUserAdmin, groupValidator.isUserMember],
   async (req: Request, res: Response) => {
     const group = await GroupCollection.updateOneByAdmin(req.body.groupName, req.body.username);
 
@@ -105,12 +109,13 @@ router.put(
  * @return {GroupResponse} - The created like
  * @throws {400} - If the new admin user does not exist
  * @throws {403} - If the user is not logged in
- * @throws {404} - If the name already exists
+ * @throws {404} - If the group does not exist
  * @throws {405} - If the user does not have right permissions
+ * @throws {406} - If the username is not in members
  */
 router.put(
   '/owner',
-  [groupValidator.isUserExists, userValidator.isUserLoggedIn, groupValidator.isGroupExists, groupValidator.isUserAdmin, groupValidator.isUserOwner],
+  [groupValidator.isUserExists, userValidator.isUserLoggedIn, groupValidator.isGroupExists, groupValidator.isUserAdmin, groupValidator.isUserOwner, groupValidator.isUserMember],
   async (req: Request, res: Response) => {
     const group = await GroupCollection.updateOneByOwner(req.body.groupName, req.body.username);
 
@@ -124,7 +129,7 @@ router.put(
 /**
  * Delete a group.
  *
- * @name DELETE /api/groups
+ * @name DELETE /api/groups/:groupName?
  * @param {strin} groupName - The name of the group to delete
  *
  * @return {string} - A success message
