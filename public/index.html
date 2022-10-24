@@ -10,6 +10,7 @@
   <script src="/scripts/user.js"></script>
   <script src="/scripts/group.js"></script>
   <script src="/scripts/bookmark.js"></script>
+  <script src="/scripts/comment.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -223,6 +224,41 @@
           </div>
           <input type="submit" value="Bookmark/unBookmark">
         </form>
+
+        <form id="comment-freet">
+          <h3>Comment on freet or another comment</h3>
+          <div>
+            <label for="freetId">Freet ID:</label>
+            <input id="freetId" name="freetId">
+          </div>
+          <div>
+            <label for="commentId">Comment ID:</label>
+            <input id="commentId" name="commentId">
+          </div>
+          <div>
+            <label for="content">Content:</label>
+            <input id="content" name="content">
+          </div>
+          <input type="submit" value="Comment">
+        </form>
+
+        <form id="view-comments-by-freet">
+          <h3>View Comments By Freet</h3>
+          <div>
+            <label for="freetId">Freet ID:</label>
+            <input id="freetId" name="freetId">
+          </div>
+          <input type="submit" value="View Comments By Freet">
+        </form>
+
+      <form id="view-comments-by-comment">
+        <h3>View Comments By Comment</h3>
+        <div>
+          <label for="commentId">Comment ID:</label>
+          <input id="commentId" name="commentId">
+        </div>
+        <input type="submit" value="View Comments By Comment">
+      </form>
 
         <form id="edit-freet">
           <h3>Edit Freet</h3>

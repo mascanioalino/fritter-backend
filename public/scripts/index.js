@@ -52,7 +52,10 @@ const formsAndHandlers = {
   'bookmark-freet': bookmarkFreet,
   'add-group-admin': addGroupAdmin,
   'change-group-owner': changeGroupOwner,
-  'delete-group': deleteGroup
+  'delete-group': deleteGroup,
+  'comment-freet': createComment,
+  'view-comments-by-comment': viewCommentsByComment,
+  'view-comments-by-freet': viewCommentsByFreet
 };
 
 // Attach handlers to forms
