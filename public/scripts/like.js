@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
 function viewLikesByFreet(fields) {
-  fetch(`/api/likes?freet=${fields.id}`)
+  fetch(`/api/likes?freetId=${fields.freetId}`)
     .then(showResponse)
     .catch(showResponse);
 }
 
 function viewLikesByUsername(fields) {
-  fetch(`/api/likes?userId=${fields.user}`)
+  fetch(`/api/likes?username=${fields.username}`)
     .then(showResponse)
     .catch(showResponse);
 }

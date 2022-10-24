@@ -314,34 +314,35 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 
-#### `GET /api/likes?user=USERNAME` - Get likes by user
+#### `GET /api/likes?username=username` - Get likes by user
 
 **Returns** 
 - An array of likes by user with username
 
 **Throws**
-- `400` - If user is not given
-- `404` - If no user has given username
+- `403` - If user is not logged in
+- `404` - If username is not valid 
 
-#### `GET /api/likes?freetId=id` - Get likes by freet.
+#### `GET /api/likes?freetId=freetId` - Get likes by freet.
 
  **Returns**
  - An array of likes in freet with id, freetId
 
  **Throws** 
- - `400` - If freetId is not given
+ - `403` - If user is not logged in
  - `404` - If no freet has given freetId
 
 #### `POST /api/likes` - Like a freet.
  
  **Body**
 
-- `id` _{string}_ - The freet's id
+- `freetId` _{string}_ - The freet's id
  **Returns**
  - A success message 
  - The created like
  **Throws** 
  - `403` - If the user is not logged in
+ - `404` - If the freet does not exist
 
 #### `GET /api/bookmarks` - Get bookmarks by user
 
