@@ -23,6 +23,7 @@ const router = express.Router();
  */
 router.get(
   '/',
+  [commentValidator.isIdPresent],
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
     if (req.query.freetId !== undefined) {

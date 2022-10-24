@@ -97,7 +97,22 @@ const isValidCommentModifier = async (req: Request, res: Response, next: NextFun
   next();
 };
 
+/**
+ * Checks if there is an ID present
+ */
+const isIdPresent = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.query.freetId && !req.query.commentId) {
+    res.status(400).json({
+      error: 'ID not given'
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
+  isIdPresent,
   isContentValid,
   isIdValid,
   isValidCommentModifier,

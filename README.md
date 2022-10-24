@@ -433,14 +433,6 @@ This renders the `index.html` file that will be used to interact with the backen
 - `404` if the user is not an owner
 
 
-#### `GET /api/searchbar?content=CONTENT` - Get groups and users that match content
-
- **Returns**
- - An array of groups and users that match the content
-
- **Throws** 
- - `400` - If content is not given
-
  #### `GET /api/comments?freetId=FREET_ID` - Get all comments for freet
 
  **Returns**
@@ -457,10 +449,19 @@ This renders the `index.html` file that will be used to interact with the backen
  **Throws** 
  - `400` - If comment_id is not given
 
+  #### `GET /api/comments?commentId=COMMENT_ID` - Get all comments for comment
+
+ **Returns**
+ - An array of comments for the comment 
+
+ **Throws** 
+ - `400` - If comment_id is not given
+
  #### `POST /api/comments` - Add a comment.
  
  **Body**
 - `freet_id` _{string}_ - The freet's id to comment on 
+- `comment_id` _{string}_ - The comment's id to comment on
 - `content` _{string}_ - The content of the comment
 
  **Returns**
@@ -469,16 +470,17 @@ This renders the `index.html` file that will be used to interact with the backen
 
  **Throws** 
  - `403` - If the user is not logged in
+ - `400` - If content is empty
+ - `413` - If content >140 characters
+ - `405` - If freet or comment do not exist
 
-#### `POST /api/comments/` - Add a comment to comment.
- 
- **Body**
-- `comment_id` _{string}_ - The comment's id to comment on 
-- `content` _{string}_ - The content of the comment
+ #### `DELETE /api/comments/:commentId?` - Delete a comment 
 
- **Returns**
- - A success message 
- - The created comment
+**Returns**
 
- **Throws** 
- - `403` - If the user is not logged in
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in or is not the author of the comment 
+- `404` if the user is not an owner
